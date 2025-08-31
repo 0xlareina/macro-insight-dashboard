@@ -71,14 +71,14 @@ export const IntegratedDashboard: React.FC = () => {
               />
             )}
             
-            {/* 整合的单页面仪表板 */}
+            {/* Integrated single-page dashboard */}
             <div>
-              {/* 顶部关键指标区域 */}
+              {/* Top key metrics area */}
               <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>总市值</span>}
+                      title={<span style={{ color: '#8b949e' }}>Total Market Cap</span>}
                       value={marketData?.marketCap / 1e12}
                       prefix="$"
                       suffix="T"
@@ -97,7 +97,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>24h 交易量</span>}
+                      title={<span style={{ color: '#8b949e' }}>24h Volume</span>}
                       value={marketData?.volume24h / 1e9}
                       prefix="$"
                       suffix="B"
@@ -116,7 +116,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>BTC 主导率</span>}
+                      title={<span style={{ color: '#8b949e' }}>BTC Dominance</span>}
                       value={marketData?.btcDominance}
                       suffix="%"
                       precision={1}
@@ -134,7 +134,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>恐慌贪婪指数</span>}
+                      title={<span style={{ color: '#8b949e' }}>Fear & Greed Index</span>}
                       value={marketData?.fearGreedIndex || 72}
                       valueStyle={{ color: '#faad14', fontSize: '18px' }}
                       suffix={
@@ -155,7 +155,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>稳定币市值</span>}
+                      title={<span style={{ color: '#8b949e' }}>Stablecoin Market Cap</span>}
                       value={(marketData?.stablecoinMarketCap || 140500000000) / 1e9}
                       prefix="$"
                       suffix="B"
@@ -174,7 +174,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d', height: '120px' }}>
                     <Statistic
-                      title={<span style={{ color: '#8b949e' }}>24h 清算</span>}
+                      title={<span style={{ color: '#8b949e' }}>24h Liquidations</span>}
                       value={(marketData?.liquidations24h || 127800000) / 1e6}
                       prefix="$"
                       suffix="M"
@@ -192,7 +192,7 @@ export const IntegratedDashboard: React.FC = () => {
                 </Col>
               </Row>
 
-              {/* 主要价格展示区域 */}
+              {/* Main price display area */}
               <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
                 {marketData?.prices.map((asset) => (
                   <Col xs={24} sm={8} md={8} lg={8} xl={8} key={asset.symbol}>
@@ -225,13 +225,13 @@ export const IntegratedDashboard: React.FC = () => {
                 ))}
               </Row>
 
-              {/* 主要数据区域 - 三列布局 */}
+              {/* Main data area - three column layout */}
               <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-                {/* 左列 - 衍生品数据 */}
+                {/* Left column - Derivatives data */}
                 <Col xs={24} lg={8}>
                   <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    {/* 资金费率 */}
-                    <Card title="🔄 资金费率" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Funding Rates */}
+                    <Card title="🔄 Funding Rates" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       {derivLoading ? (
                         <Spin />
                       ) : (
@@ -248,8 +248,8 @@ export const IntegratedDashboard: React.FC = () => {
                       )}
                     </Card>
 
-                    {/* 未平仓合约 */}
-                    <Card title="📊 未平仓合约" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Open Interest */}
+                    <Card title="📊 Open Interest" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       {derivLoading ? (
                         <Spin />
                       ) : (
@@ -276,11 +276,11 @@ export const IntegratedDashboard: React.FC = () => {
                   </Space>
                 </Col>
 
-                {/* 中列 - 市场分析 */}
+                {/* Middle column - Market Analysis */}
                 <Col xs={24} lg={8}>
                   <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    {/* 热门币种 */}
-                    <Card title="🔥 热门币种" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Trending Coins */}
+                    <Card title="🔥 Trending Coins" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       {crossLoading ? (
                         <Spin />
                       ) : (
@@ -298,19 +298,19 @@ export const IntegratedDashboard: React.FC = () => {
                                 {coin.priceChange24h >= 0 ? '+' : ''}{coin.priceChange24h?.toFixed(2) || 0}%
                               </span>
                             </div>
-                          )) || <span style={{ color: '#8b949e' }}>暂无数据</span>}
+                          )) || <span style={{ color: '#8b949e' }}>No data available</span>}
                         </div>
                       )}
                     </Card>
 
-                    {/* 清算数据 */}
-                    <Card title="💥 24h 清算" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Liquidation Data */}
+                    <Card title="💥 24h Liquidations" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       {derivLoading ? (
                         <Spin />
                       ) : (
                         <div>
                           <Statistic
-                            title="总清算"
+                            title="Total Liquidations"
                             value={derivativesData?.liquidations.total24h || 0}
                             prefix="$"
                             suffix="M"
@@ -319,13 +319,13 @@ export const IntegratedDashboard: React.FC = () => {
                           />
                           <Row style={{ marginTop: '12px' }}>
                             <Col span={12}>
-                              <Text style={{ color: '#8b949e', fontSize: '12px' }}>多单: </Text>
+                              <Text style={{ color: '#8b949e', fontSize: '12px' }}>Longs: </Text>
                               <Text style={{ color: '#f85149' }}>
                                 ${(derivativesData?.liquidations.longs || 0).toFixed(1)}M
                               </Text>
                             </Col>
                             <Col span={12}>
-                              <Text style={{ color: '#8b949e', fontSize: '12px' }}>空单: </Text>
+                              <Text style={{ color: '#8b949e', fontSize: '12px' }}>Shorts: </Text>
                               <Text style={{ color: '#3fb950' }}>
                                 ${(derivativesData?.liquidations.shorts || 0).toFixed(1)}M
                               </Text>
@@ -337,11 +337,11 @@ export const IntegratedDashboard: React.FC = () => {
                   </Space>
                 </Col>
 
-                {/* 右列 - 稳定币数据 */}
+                {/* Right column - Stablecoin Data */}
                 <Col xs={24} lg={8}>
                   <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    {/* 主要稳定币 */}
-                    <Card title="💵 主要稳定币" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Major Stablecoins */}
+                    <Card title="💵 Major Stablecoins" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       {stableLoading ? (
                         <Spin />
                       ) : (
@@ -366,8 +366,8 @@ export const IntegratedDashboard: React.FC = () => {
                       )}
                     </Card>
 
-                    {/* 相关性分析 */}
-                    <Card title="🔗 相关性分析" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
+                    {/* Correlation Analysis */}
+                    <Card title="🔗 Correlation Analysis" style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                       <div>
                         {crossAssetData?.correlations && Object.entries(crossAssetData.correlations).slice(0, 3).map(([asset, correlations]) => (
                           <div key={asset} style={{ marginBottom: '8px' }}>
@@ -393,12 +393,12 @@ export const IntegratedDashboard: React.FC = () => {
                 </Col>
               </Row>
 
-              {/* 底部补充信息 */}
+              {/* Bottom additional information */}
               <Row gutter={[16, 16]}>
                 <Col xs={24} md={12} lg={6}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                     <Statistic
-                      title="DeFi 市值"
+                      title="DeFi Market Cap"
                       value={50}
                       prefix="$"
                       suffix="B"
@@ -410,7 +410,7 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} md={12} lg={6}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                     <Statistic
-                      title="稳定币健康度"
+                      title="Stablecoin Health"
                       value={98}
                       suffix="%"
                       precision={1}
@@ -421,14 +421,14 @@ export const IntegratedDashboard: React.FC = () => {
                 <Col xs={24} md={12} lg={6}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                     <Text style={{ color: '#8b949e', fontSize: '12px' }}>
-                      最后更新: {lastUpdate?.toLocaleTimeString() || 'N/A'}
+                      Last Update: {lastUpdate?.toLocaleTimeString() || 'N/A'}
                     </Text>
                   </Card>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
                   <Card style={{ background: '#161b22', borderColor: '#30363d' }} size="small">
                     <Text style={{ color: '#8b949e', fontSize: '12px' }}>
-                      数据源: CoinGecko, Binance, CoinGlass
+                      Data Source: CoinGecko, Binance, CoinGlass
                     </Text>
                   </Card>
                 </Col>

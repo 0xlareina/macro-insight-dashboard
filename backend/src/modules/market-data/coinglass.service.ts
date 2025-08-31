@@ -54,7 +54,7 @@ export class CoinGlassService {
     return headers;
   }
 
-  // 获取资金费率数据
+  // Get funding rate data
   async getFundingRates(symbols: string[] = ['BTC', 'ETH', 'SOL']): Promise<CoinGlassFundingRate[]> {
     try {
       const results: CoinGlassFundingRate[] = [];
@@ -78,9 +78,9 @@ export class CoinGlassService {
             symbol: symbol,
             exchangeName: 'Aggregated',
             rate: parseFloat(latest.rate || 0),
-            nextFundingTime: Date.now() + 8 * 3600000, // 8小时后
+            nextFundingTime: Date.now() + 8 * 3600000, // 8 hours later
             markPrice: parseFloat(latest.price || 0),
-            indexPrice: parseFloat(latest.price || 0) * 0.999, // 估算指数价格
+            indexPrice: parseFloat(latest.price || 0) * 0.999, // Estimated index price
           });
         }
       }
@@ -96,7 +96,7 @@ export class CoinGlassService {
     }
   }
 
-  // 获取持仓量数据
+  // Get open interest data
   async getOpenInterest(symbols: string[] = ['BTC', 'ETH', 'SOL']): Promise<CoinGlassOpenInterest[]> {
     try {
       const results: CoinGlassOpenInterest[] = [];
@@ -136,7 +136,7 @@ export class CoinGlassService {
     }
   }
 
-  // 获取清算数据
+  // Get liquidation data
   async getLiquidations(timeframe: string = '24h'): Promise<{
     total: number;
     longs: number;
@@ -168,10 +168,10 @@ export class CoinGlassService {
             bySymbol[symbol] = { longs: 0, shorts: 0, total: 0 };
           }
 
-          if (item.side === 'sell') { // 多单清算
+          if (item.side === 'sell') { // Long liquidations
             totalLongs += amount;
             bySymbol[symbol].longs += amount;
-          } else { // 空单清算
+          } else { // Short liquidations
             totalShorts += amount;
             bySymbol[symbol].shorts += amount;
           }
@@ -194,7 +194,7 @@ export class CoinGlassService {
     }
   }
 
-  // 获取稳定币市值数据
+  // Get stablecoin market cap data
   async getStablecoinMarketCap(): Promise<{ marketCap: number; lastUpdate: string } | null> {
     try {
       const url = `${this.baseUrl}/api/index/stableCoin-marketCap-history`;
@@ -205,7 +205,7 @@ export class CoinGlassService {
       );
 
       if (data.code === '0' && data.data && data.data.length > 0) {
-        // 获取最新的数据点
+        // Get latest data point
         const latest = data.data[data.data.length - 1];
         const latestMarketCap = latest.data_list && latest.data_list.length > 0 
           ? latest.data_list[latest.data_list.length - 1] 
@@ -216,7 +216,7 @@ export class CoinGlassService {
 
         if (latestMarketCap) {
           return {
-            marketCap: parseFloat(latestMarketCap) * 1e9, // 转换为美元（假设返回的是十亿美元单位）
+            marketCap: parseFloat(latestMarketCap) * 1e9, // Convert to USD (assuming returned in billions)
             lastUpdate: new Date(latestTime * 1000).toISOString(),
           };
         }
@@ -229,7 +229,7 @@ export class CoinGlassService {
     }
   }
 
-  // 获取综合衍生品数据
+  // Get comprehensive derivatives data
   async getDerivativesOverview() {
     const [fundingRates, openInterest, liquidations] = await Promise.all([
       this.getFundingRates(),
@@ -252,7 +252,7 @@ export class CoinGlassService {
       })),
       liquidations: {
         symbol: 'ALL',
-        total24h: liquidations.total / 1e6, // 转换为百万美元
+        total24h: liquidations.total / 1e6, // Convert to millions USD
         longs: liquidations.longs / 1e6,
         shorts: liquidations.shorts / 1e6,
         ratio: liquidations.longs / (liquidations.shorts || 1),
@@ -261,7 +261,7 @@ export class CoinGlassService {
     };
   }
 
-  // Mock数据备份
+  // Mock data backup
   private getMockFundingRates(): CoinGlassFundingRate[] {
     return [
       { symbol: 'BTC', exchangeName: 'Mock', rate: 0.0001, nextFundingTime: Date.now() + 8 * 3600000, markPrice: 108500, indexPrice: 108450 },

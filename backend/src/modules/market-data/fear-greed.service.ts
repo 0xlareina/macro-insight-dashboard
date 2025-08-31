@@ -12,10 +12,10 @@ export class FearGreedService {
   
   constructor(private readonly httpService: HttpService) {}
 
-  // 获取当前恐慌贪婪指数
+  // Get current Fear & Greed Index
   async getCurrentIndex() {
     try {
-      // 使用缓存数据（如果在1小时内）
+      // Use cached data (if within 1 hour)
       if (this.cachedData && this.lastUpdate) {
         const hourAgo = new Date(Date.now() - 3600000);
         if (this.lastUpdate > hourAgo) {
@@ -36,7 +36,7 @@ export class FearGreedService {
         lastUpdate: new Date().toISOString(),
       };
 
-      // 更新缓存
+      // Update cache
       this.cachedData = result;
       this.lastUpdate = new Date();
 
@@ -47,7 +47,7 @@ export class FearGreedService {
     }
   }
 
-  // 获取历史数据
+  // Get historical data
   async getHistoricalData(days: number = 30) {
     try {
       const { data } = await firstValueFrom(
@@ -66,7 +66,7 @@ export class FearGreedService {
     }
   }
 
-  // 分析指数变化
+  // Analyze index changes
   async analyzeIndexChange() {
     try {
       const history = await this.getHistoricalData(7);
@@ -94,7 +94,7 @@ export class FearGreedService {
     }
   }
 
-  // 计算趋势
+  // Calculate trend
   private calculateTrend(history: any[]): string {
     if (history.length < 3) return 'neutral';
     
@@ -108,7 +108,7 @@ export class FearGreedService {
     return 'neutral';
   }
 
-  // 计算波动率
+  // Calculate volatility
   private calculateVolatility(history: any[]): number {
     if (history.length < 2) return 0;
     
@@ -118,14 +118,14 @@ export class FearGreedService {
     return Math.sqrt(variance);
   }
 
-  // 获取极端区域
+  // Get extreme zones
   private getExtremeZone(value: number): string | null {
     if (value <= 20) return 'extreme_fear';
     if (value >= 80) return 'extreme_greed';
     return null;
   }
 
-  // 获取交易建议
+  // Get trading suggestions
   private getRecommendation(current: number, history: any[]): string {
     const trend = this.calculateTrend(history);
     
@@ -144,7 +144,7 @@ export class FearGreedService {
     return 'Monitor market conditions';
   }
 
-  // 定时更新缓存
+  // 定时Update cache
   @Cron(CronExpression.EVERY_HOUR)
   async updateCache() {
     try {
@@ -155,7 +155,7 @@ export class FearGreedService {
     }
   }
 
-  // Mock数据
+  // Mock data
   private getMockCurrentIndex() {
     return {
       value: 72,

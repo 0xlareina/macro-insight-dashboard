@@ -14,10 +14,10 @@ export class CoinMarketCapService {
     private readonly configService: ConfigService,
   ) {}
 
-  // 获取CoinMarketCap的恐慌贪婪指数
+  // Get CoinMarketCap Fear & Greed Index
   async getFearGreedIndex() {
     try {
-      // 如果没有API密钥，直接返回备用数据
+      // If no API key, return fallback data directly
       if (!this.apiKey) {
         this.logger.warn('CoinMarketCap API key not provided, using fallback data');
         return this.getFallbackFearGreedIndex();
@@ -46,15 +46,15 @@ export class CoinMarketCapService {
       throw new Error('No data available');
     } catch (error) {
       this.logger.error('Failed to fetch CoinMarketCap Fear & Greed Index', error);
-      // 如果CoinMarketCap API失败，返回备用数据
+      // If CoinMarketCap API fails, return fallback data
       return this.getFallbackFearGreedIndex();
     }
   }
 
-  // 获取历史恐慌贪婪指数
+  // Get historical Fear & Greed Index
   async getFearGreedHistory(days: number = 7) {
     try {
-      // 如果没有API密钥，直接返回备用数据
+      // If no API key, return fallback data directly
       if (!this.apiKey) {
         this.logger.warn('CoinMarketCap API key not provided, using fallback historical data');
         return this.getFallbackHistoricalData(days);
@@ -83,12 +83,12 @@ export class CoinMarketCapService {
       throw new Error('No historical data available');
     } catch (error) {
       this.logger.error('Failed to fetch CoinMarketCap Fear & Greed history', error);
-      // 返回备用历史数据
+      // Return fallback historical data
       return this.getFallbackHistoricalData(days);
     }
   }
 
-  // 根据数值获取分类
+  // Get classification based on value
   private getClassification(value: number): string {
     if (value <= 25) return 'Extreme Fear';
     if (value <= 45) return 'Fear';
@@ -97,9 +97,9 @@ export class CoinMarketCapService {
     return 'Extreme Greed';
   }
 
-  // 备用数据 - 当CoinMarketCap API不可用时
+  // Fallback data - when CoinMarketCap API is unavailable
   private getFallbackFearGreedIndex() {
-    // 尝试从其他来源获取或使用默认值
+    // Try to get from other sources or use default values
     return {
       value: 50,
       classification: 'Neutral',
@@ -109,7 +109,7 @@ export class CoinMarketCapService {
     };
   }
 
-  // 备用历史数据
+  // Fallback historical data
   private getFallbackHistoricalData(days: number) {
     const data = [];
     const baseValue = 50;
@@ -117,7 +117,7 @@ export class CoinMarketCapService {
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
-      // 模拟一些波动
+      // Simulate some volatility
       const randomFactor = Math.sin(i * 0.5) * 20 + baseValue;
       const value = Math.round(Math.max(0, Math.min(100, randomFactor)));
       
@@ -131,7 +131,7 @@ export class CoinMarketCapService {
     return data;
   }
 
-  // 获取市场情绪详细数据
+  // Get detailed market sentiment data
   async getMarketSentimentDetails() {
     try {
       const { data } = await firstValueFrom(

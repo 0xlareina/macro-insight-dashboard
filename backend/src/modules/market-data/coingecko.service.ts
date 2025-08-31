@@ -13,7 +13,7 @@ export class CoinGeckoService {
     private readonly configService: ConfigService,
   ) {}
 
-  // 获取市场概览数据
+  // Get market overview data
   async getMarketOverview() {
     try {
       const { data } = await firstValueFrom(
@@ -36,7 +36,7 @@ export class CoinGeckoService {
     }
   }
 
-  // 获取代币详细信息
+  // Get token details
   async getTokenDetails(ids: string[] = ['bitcoin', 'ethereum', 'solana']) {
     try {
       const { data } = await firstValueFrom(
@@ -80,7 +80,7 @@ export class CoinGeckoService {
     }
   }
 
-  // 获取热门币种
+  // Get trending coins
   async getTrendingCoins() {
     try {
       const { data } = await firstValueFrom(
@@ -105,7 +105,7 @@ export class CoinGeckoService {
     }
   }
 
-  // 获取DeFi数据
+  // Get DeFi data
   async getDefiData() {
     try {
       const { data } = await firstValueFrom(
@@ -127,10 +127,10 @@ export class CoinGeckoService {
     }
   }
 
-  // 获取稳定币数据
+  // Get stablecoin data
   async getStablecoinData() {
     try {
-      // 获取所有稳定币数据，包括USD、EUR、黄金等各类稳定币
+      // Get all stablecoin data including USD, EUR, gold-backed and other types
       const { data } = await firstValueFrom(
         this.httpService.get(`${this.baseUrl}/coins/markets`, {
           params: {
@@ -153,7 +153,7 @@ export class CoinGeckoService {
         marketCapChange24h: coin.market_cap_change_24h,
         marketCapChangePercentage24h: coin.market_cap_change_percentage_24h,
         circulatingSupply: coin.circulating_supply,
-        pegDeviation: Math.abs(1 - coin.current_price) * 100, // 与1美元的偏差百分比
+        pegDeviation: Math.abs(1 - coin.current_price) * 100, // Percentage deviation from 1 USD
       }));
     } catch (error) {
       this.logger.error('Failed to fetch stablecoin data', error);
@@ -161,18 +161,18 @@ export class CoinGeckoService {
     }
   }
 
-  // 获取历史市场数据 - 7天历史数据
+  // Get historical market data - 7 days history
   async getHistoricalMarketData(days: number = 7) {
     try {
-      // 并发获取多个数据源
+      // Fetch multiple data sources concurrently
       const promises = [
-        // 全球市场数据 - 使用比特币作为代理
+        // Global market data - using Bitcoin as proxy
         firstValueFrom(
           this.httpService.get(`${this.baseUrl}/coins/bitcoin/market_chart`, {
             params: { vs_currency: 'usd', days: days, interval: 'daily' }
           })
         ),
-        // 获取总体市场数据 (当前数据)
+        // Get overall market data (current data)
         firstValueFrom(this.httpService.get(`${this.baseUrl}/global`)),
       ];
 
@@ -181,10 +181,10 @@ export class CoinGeckoService {
       const btcHistory = btcHistoryResponse.data;
       const globalData = globalResponse.data.data;
 
-      // 处理历史数据
+      // Process historical data
       const marketCapHistory = btcHistory.market_caps.map((item, index) => ({
         date: new Date(item[0]).toISOString().split('T')[0],
-        value: Math.round(globalData.total_market_cap.usd * (1 + (Math.random() - 0.5) * 0.1)), // 基于当前市值的模拟历史数据
+        value: Math.round(globalData.total_market_cap.usd * (1 + (Math.random() - 0.5) * 0.1)), // Simulated historical data based on current market cap
       }));
 
       const volumeHistory = btcHistory.total_volumes.map((item, index) => ({
@@ -192,7 +192,7 @@ export class CoinGeckoService {
         value: Math.round(globalData.total_volume.usd * (1 + (Math.random() - 0.5) * 0.3)),
       }));
 
-      // BTC主导率历史 (相对稳定)
+      // BTC dominance history (relatively stable)
       const btcDominanceHistory = btcHistory.market_caps.map((item, index) => ({
         date: new Date(item[0]).toISOString().split('T')[0],
         value: Number((globalData.market_cap_percentage.btc * (1 + (Math.random() - 0.5) * 0.05)).toFixed(1)),
@@ -211,23 +211,23 @@ export class CoinGeckoService {
     }
   }
 
-  // 生成稳定币市值历史数据 - 基于真实趋势
+  // Generate stablecoin market cap history - based on real trends
   private async generateStablecoinHistory(days: number) {
     try {
-      // 获取当前稳定币总市值
+      // Get current total stablecoin market cap
       const stablecoins = await this.getStablecoinData();
       const currentMarketCap = stablecoins.reduce((sum, coin) => sum + coin.marketCap, 0);
       
       const data = [];
-      // 稳定币市场相对稳定，但有小幅波动
+      // Stablecoin market is relatively stable with small fluctuations
       for (let i = days - 1; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         
-        // 稳定币市值通常呈现缓慢增长或缩减趋势
-        // 模拟一个渐进的变化，而不是随机波动
-        const trendFactor = 1 - (i * 0.001); // 每天0.1%的趋势变化
-        const dailyVolatility = (Math.random() - 0.5) * 0.005; // 0.5%的日常波动
+        // Stablecoin market cap usually shows slow growth or reduction trend
+        // Simulate gradual change instead of random volatility
+        const trendFactor = 1 - (i * 0.001); // 0.1% daily trend change
+        const dailyVolatility = (Math.random() - 0.5) * 0.005; // 0.5% daily volatility
         const value = Math.round(currentMarketCap * (trendFactor + dailyVolatility));
         
         data.push({
@@ -237,7 +237,7 @@ export class CoinGeckoService {
       }
       return data;
     } catch (error) {
-      // 如果获取失败，使用固定基准值
+      // If fetch fails, use fixed baseline value
       const baseValue = 140500000000; // $140.5B base
       const data = [];
       
@@ -255,7 +255,7 @@ export class CoinGeckoService {
     }
   }
 
-  // 生成清算历史数据
+  // Generate liquidation history data
   private generateLiquidationHistory(days: number) {
     const baseValue = 127800000; // $127.8M base
     const data = [];
@@ -272,7 +272,7 @@ export class CoinGeckoService {
     return data;
   }
 
-  // Mock数据
+  // Mock data
   private getMockMarketOverview() {
     return {
       totalMarketCap: 1680000000000,

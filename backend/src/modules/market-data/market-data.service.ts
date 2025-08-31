@@ -20,7 +20,7 @@ export class MarketDataService {
     private readonly cacheService: RedisCacheService,
   ) {}
 
-  // 获取综合市场数据（包含历史数据）
+  // Get comprehensive market data (including historical data)
   async getMarketOverview() {
     const cacheKey = this.cacheService.generateKey(
       RedisCacheService.KEY_PREFIX.MARKET,
@@ -30,19 +30,19 @@ export class MarketDataService {
     return this.cacheService.getOrSet(
       cacheKey,
       async () => {
-        // 使用Alternative.me作为主要源，CoinMarketCap作为备用（需要API密钥）
+        // Use Alternative.me as primary source, CoinMarketCap as backup (requires API key)
         let fearGreedIndex;
         let fearGreedHistory;
         
         try {
-          // 优先使用Alternative.me (免费且稳定)
+          // Prioritize Alternative.me (free and stable)
           [fearGreedIndex, fearGreedHistory] = await Promise.all([
             this.fearGreedService.getCurrentIndex(),
             this.fearGreedService.getHistoricalData(7),
           ]);
         } catch (error) {
           this.logger.warn('Alternative.me Fear & Greed API failed, falling back to CoinMarketCap');
-          // 降级到CoinMarketCap
+          // Fallback to CoinMarketCap
           [fearGreedIndex, fearGreedHistory] = await Promise.all([
             this.coinMarketCapService.getFearGreedIndex(),
             this.coinMarketCapService.getFearGreedHistory(7),
@@ -52,11 +52,11 @@ export class MarketDataService {
         const [binancePrices, marketOverview, historicalData, stablecoinData] = await Promise.all([
           this.binanceService.getSpotPrices(),
           this.coinGeckoService.getMarketOverview(),
-          this.coinGeckoService.getHistoricalMarketData(7), // 获取7天历史数据
-          this.getStablecoinData(), // 获取稳定币数据
+          this.coinGeckoService.getHistoricalMarketData(7), // Get 7 days historical data
+          this.getStablecoinData(), // Get stablecoin data
         ]);
 
-        // 处理恐慌贪婪指数历史数据
+        // Process Fear & Greed Index historical data
         const fearGreedHistoryData = fearGreedHistory.map(item => ({
           date: typeof item.date === 'string' ? item.date.split('T')[0] : item.date,
           value: item.value,
@@ -69,10 +69,10 @@ export class MarketDataService {
           btcDominance: marketOverview.btcDominance,
           fearGreedIndex: fearGreedIndex.value,
           fearGreedClassification: fearGreedIndex.classification,
-          stablecoinMarketCap: stablecoinData.totalMarketCap || 140500000000, // 使用真实稳定币市值
-          liquidations24h: 127800000, // 默认值，后续可以从衍生品数据获取
+          stablecoinMarketCap: stablecoinData.totalMarketCap || 140500000000, // Use real stablecoin market cap
+          liquidations24h: 127800000, // Default value, can be obtained from derivatives data later
           
-          // 历史数据
+          // Historical data
           historicalData: {
             marketCap: historicalData.marketCap,
             volume24h: historicalData.volume24h,
@@ -89,7 +89,7 @@ export class MarketDataService {
     );
   }
 
-  // 获取衍生品数据
+  // Get derivatives data
   async getDerivativesData() {
     const cacheKey = this.cacheService.generateKey(
       RedisCacheService.KEY_PREFIX.FUNDING,
@@ -99,7 +99,7 @@ export class MarketDataService {
     return this.cacheService.getOrSet(
       cacheKey,
       async () => {
-        // 使用CoinGlass API获取更准确的衍生品数据
+        // Use CoinGlass API for more accurate derivatives data
         const derivativesData = await this.coinGlassService.getDerivativesOverview();
         
         return derivativesData;
@@ -108,7 +108,7 @@ export class MarketDataService {
     );
   }
 
-  // 获取稳定币数据
+  // Get stablecoin data
   async getStablecoinData() {
     const cacheKey = this.cacheService.generateKey(
       RedisCacheService.KEY_PREFIX.MARKET,
@@ -120,7 +120,7 @@ export class MarketDataService {
       async () => {
         const stablecoins = await this.coinGeckoService.getStablecoinData();
         
-        // 尝试从CoinGlass获取更准确的总市值数据
+        // Try to get more accurate total market cap from CoinGlass
         const coinGlassMarketCap = await this.coinGlassService.getStablecoinMarketCap();
         const totalMarketCap = coinGlassMarketCap?.marketCap || 
           stablecoins.reduce((sum, coin) => sum + coin.marketCap, 0);
@@ -136,11 +136,11 @@ export class MarketDataService {
           lastUpdate: new Date().toISOString(),
         };
       },
-      RedisCacheService.TTL.HOUR, // 增加稳定币缓存时间到1小时以减少API调用
+      RedisCacheService.TTL.HOUR, // Increase stablecoin cache time to 1 hour to reduce API calls
     );
   }
 
-  // 获取恐慌贪婪指数历史
+  // Get Fear & Greed Index history
   async getFearGreedHistory(days: number = 30) {
     const cacheKey = this.cacheService.generateKey(
       RedisCacheService.KEY_PREFIX.FEAR_GREED,
@@ -155,7 +155,7 @@ export class MarketDataService {
     );
   }
 
-  // 获取跨资产分析数据
+  // Get cross-asset analysis data
   async getCrossAssetData() {
     const cacheKey = this.cacheService.generateKey(
       RedisCacheService.KEY_PREFIX.MARKET,
@@ -170,7 +170,7 @@ export class MarketDataService {
           this.coinGeckoService.getTrendingCoins(),
         ]);
 
-        // 计算相关性（简化版本）
+        // Calculate correlations (simplified version)
         const correlationMatrix = this.calculateCorrelations(tokenDetails);
 
         return {
@@ -184,7 +184,7 @@ export class MarketDataService {
     );
   }
 
-  // 定时更新核心数据
+  // Scheduled update of core data
   @Cron(CronExpression.EVERY_5_MINUTES)
   async updateMarketData() {
     try {
@@ -199,7 +199,7 @@ export class MarketDataService {
     }
   }
 
-  // 暂时禁用定时更新以避免API限制
+  // Temporarily disable scheduled updates to avoid API limits
   // @Cron(CronExpression.EVERY_10_MINUTES)
   async updateStablecoinData() {
     try {
@@ -220,10 +220,10 @@ export class MarketDataService {
     }
   }
 
-  // 简化的相关性计算
+  // Simplified correlation calculation
   private calculateCorrelations(tokens: any[]) {
-    // 这里可以实现更复杂的相关性计算逻辑
-    // 目前返回模拟数据
+    // More complex correlation calculation logic can be implemented here
+    // Currently returns mock data
     return {
       BTC: { ETH: 0.82, SOL: 0.74, SPX: 0.42, GOLD: 0.18 },
       ETH: { BTC: 0.82, SOL: 0.88, SPX: 0.38, GOLD: 0.12 },
@@ -231,7 +231,7 @@ export class MarketDataService {
     };
   }
 
-  // 健康检查
+  // Health check
   async healthCheck() {
     try {
       const [binanceHealth, coinGeckoHealth, fearGreedHealth] = await Promise.all([

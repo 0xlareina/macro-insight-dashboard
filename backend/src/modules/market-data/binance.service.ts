@@ -13,7 +13,7 @@ export class BinanceService {
     private readonly configService: ConfigService,
   ) {}
 
-  // 获取现货价格
+  // Get spot prices
   async getSpotPrices(symbols: string[] = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT']) {
     try {
       const url = `${this.baseUrl}/api/v3/ticker/24hr`;
@@ -39,7 +39,7 @@ export class BinanceService {
     }
   }
 
-  // 获取期货资金费率
+  // Get futures funding rates
   async getFundingRates(symbols: string[] = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT']) {
     try {
       const url = `${this.baseUrl}/fapi/v1/premiumIndex`;
@@ -66,7 +66,7 @@ export class BinanceService {
     }
   }
 
-  // 获取未平仓合约
+  // Get open interest
   async getOpenInterest(symbols: string[] = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT']) {
     try {
       const url = `${this.baseUrl}/fapi/v1/openInterest`;
@@ -91,7 +91,7 @@ export class BinanceService {
     }
   }
 
-  // 获取清算数据
+  // Get liquidation data
   async getLiquidations(symbol: string = 'BTCUSDT') {
     try {
       const url = `${this.baseUrl}/fapi/v1/allForceOrders`;
@@ -120,7 +120,7 @@ export class BinanceService {
     }
   }
 
-  // 获取订单簿深度
+  // Get order book depth
   async getOrderBook(symbol: string = 'BTCUSDT', limit: number = 20) {
     try {
       const url = `${this.baseUrl}/api/v3/depth`;
@@ -152,14 +152,14 @@ export class BinanceService {
     }
   }
 
-  // 计算清算量
+  // Calculate liquidation volume
   private calculateLiquidationVolume(orders: any[]): number {
     return orders.reduce((sum, order) => {
       return sum + parseFloat(order.executedQty) * parseFloat(order.averagePrice);
     }, 0);
   }
 
-  // Mock数据作为备用
+  // Mock data as fallback
   private getMockPrices() {
     return [
       { symbol: 'BTC', price: 43250.50, change24h: 2.98, volume24h: 28500000000, high24h: 44000, low24h: 42000 },
