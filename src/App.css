@@ -1,0 +1,301 @@
+/* CryptoSense Dashboard - Global Styles */
+
+@import 'antd/dist/reset.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+               'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 
+               'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0d1117;
+  color: #c9d1d9;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* App Layout */
+.app-layout {
+  min-height: 100vh;
+}
+
+.app-header {
+  background: #161b22 !important;
+  border-bottom: 1px solid #30363d;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.app-content {
+  background: #0d1117;
+  min-height: calc(100vh - 64px);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+      "sentiment price"
+      "derivatives derivatives";
+  }
+  
+  .sentiment-section {
+    grid-area: sentiment;
+  }
+  
+  .price-section {
+    grid-area: price;
+  }
+  
+  .derivatives-section {
+    grid-area: derivatives;
+  }
+}
+
+@media (min-width: 1600px) {
+  .dashboard-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-areas: 
+      "sentiment price derivatives";
+  }
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Fear & Greed Gauge */
+.fear-greed-gauge {
+  position: relative;
+}
+
+.gauge-components {
+  margin-top: 16px;
+}
+
+.gauge-components h4 {
+  margin-bottom: 12px;
+  color: #8b949e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.component-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.component-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.component-name {
+  color: #c9d1d9;
+}
+
+.component-weight {
+  color: #8b949e;
+  font-weight: 500;
+}
+
+/* Alert Sidebar */
+.alert-sidebar {
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.alert-sidebar .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Cards */
+.ant-card {
+  background: #161b22 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 8px;
+}
+
+.ant-card-head {
+  border-bottom: 1px solid #30363d !important;
+}
+
+.ant-card-head-title {
+  color: #c9d1d9 !important;
+  font-weight: 600;
+}
+
+.ant-card-body {
+  padding: 20px;
+}
+
+/* Statistics */
+.ant-statistic .ant-statistic-title {
+  color: #8b949e !important;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.ant-statistic .ant-statistic-content {
+  color: #c9d1d9 !important;
+  font-weight: 600;
+}
+
+/* Dividers */
+.ant-divider {
+  border-color: #30363d !important;
+}
+
+/* Tags */
+.ant-tag {
+  border-radius: 4px;
+  font-weight: 500;
+  border: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-content {
+    padding: 16px !important;
+  }
+  
+  .dashboard-grid {
+    gap: 16px;
+  }
+  
+  .component-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .ant-card-body {
+    padding: 16px;
+  }
+}
+
+/* Loading States */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Connection Status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.connection-status.connected {
+  color: #26d0ce;
+}
+
+.connection-status.disconnected {
+  color: #f85149;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #161b22;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+/* Animation Utilities */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Number formatting */
+.positive-value {
+  color: #26d0ce !important;
+}
+
+.negative-value {
+  color: #f85149 !important;
+}
+
+.neutral-value {
+  color: #c9d1d9 !important;
+}
+
+/* High contrast for important metrics */
+.metric-large {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+}
+
+.metric-medium {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.metric-small {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+}
